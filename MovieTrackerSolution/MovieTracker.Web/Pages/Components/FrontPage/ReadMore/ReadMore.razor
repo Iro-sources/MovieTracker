@@ -1,0 +1,126 @@
+﻿@page "/movies/{id}"
+@using MovieTracker.Models.Dtos.UserMovies.Dtos;
+@using MovieTracker.Web.Services.Contracts;
+@using Microsoft.AspNetCore.Components.Routing;
+@inject IMovieDataService _svc
+@inject IUserMoviesService _userMovie
+@inject NavigationManager NavigationManager
+@inject UserMoviesGrpcService.MovieService.MovieServiceClient _movieGrpcClient
+<section class="readmore-section">
+    @if (isLoading)
+    {
+        <p>Loading..</p>
+    }
+    else
+    {
+        <h3>@MovieDetails.Title (@MovieDetails.Year)</h3>
+        <p>Rating: @MovieDetails.ImDbRating / 10</p>
+        <section class="readmore-content">
+            <img src="@MovieDetails.Image" alt="@MovieDetails.Title" style="max-width:500px" />
+            <article class="readmore-article">
+                <h5>Directed by: @MovieDetails.Directors</h5>
+                <h5>Written by: @MovieDetails.Writers</h5>
+                <p>Plot: @MovieDetails.Plot</p>
+                <div>
+                    <h5>Main cast:</h5>
+                    <ul>
+
+                        @if (MovieDetails.StarList != null)
+                        {
+                            @foreach (var star in @MovieDetails.StarList)
+                            {
+                                <li>@star.Name</li>
+
+                            }
+                        }
+                    </ul>
+
+                </div>
+                <p>Awarded @MovieDetails.Awards</p>
+                <a href="@MovieTrailer.VideoUrl" target="_blank" class="btn btn-outline-light">Movie Trailer</a>
+                <a @onclick="() => Navigate(MovieDetails.Id)" class="btn btn-outline-light">User reviews</a>
+                @if (@ExternalSites?.Netflix?.Url != null)
+                {
+                    <a href="@ExternalSites?.Netflix?.Url" target="_blank" class="btn btn-outline-light">Stream on Netflix</a>
+                }
+                @if (@ExternalSites?.GooglePlay?.Url != null)
+                {
+                    <a href="@ExternalSites?.GooglePlay?.Url" target="_blank" class="btn btn-outline-light">Stream on GooglePlay</a>
+                }
+                <AuthorizeView>
+                    <Authorized>
+                        <a href="javascript:;" @onclick="@(async()=>await PostData(MovieDetails,@context.User.Identity.Name))" class="btn btn-outline-light">Add to seen movies</a>
+                    </Authorized>
+                </AuthorizeView>
+                <ul>
+                    <h5>Liked it? Then you might also like:</h5>
+                    @if (MovieDetails.Similars != null)
+                    {
+                        @for (var i = 0; i < 3; i++)
+                        {
+                            <li id="similars"> @MovieDetails.Similars[i].Title</li>
+                        }
+                    }
+
+                </ul>
+            </article>
+        </section>
+    }
+
+</section>
+
+@code {
+
+    public MovieDetailDto MovieDetails { get; set; } = new();
+    public MovieTrailerDto MovieTrailer { get; set; } = new();
+    public ExternalSitesDto ExternalSites { get; set; } = new();
+    public ReviewListDTO ReviewData { get; set; } = new();
+    public bool isLoading { get; set; } = true;
+
+    [Parameter]
+    public string Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        MovieDetails = await _svc.GetMovieById(Id);
+        MovieTrailer = await _svc.GetMovieTrailer(Id);
+        ExternalSites = await _svc.GetExternalSites(Id);
+        ReviewData = await _svc.GetReviewList(Id);
+
+        isLoading = false;
+
+    }
+    public async Task PostData(MovieDetailDto item, string name)
+    {
+        var result = await _movieGrpcClient.AddUserMovieAsync(new UserMoviesGrpcService.UserMovieRequest
+            {
+                UserMovies = new UserMoviesGrpcService.UserMovie
+                {
+                    Id = item.Id + "--" + name,
+                    FullTitle = item.Title,
+                    Crew = string.Empty,
+                    Image = item.Image,
+                    ImDbRating = item.ImDbRating ?? 0,
+                    Rank = item.Rank ?? 0,
+                    ImDbRatingCount = "",
+                    Title = item.Title,
+                    UserId = name,
+                    Year = item.Year ?? 0,
+
+                }
+            });
+    }
+    public void Navigate(string movieId)
+    {
+        NavigationManager.NavigateTo($"/movies/reviews/{movieId}");
+    }
+
+    public void NavigateToActor(string actorId)
+    {
+        NavigationManager.NavigateTo($"/movies/actor/{actorId}");
+    }
+
+}
+

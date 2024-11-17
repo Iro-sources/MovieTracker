@@ -1,0 +1,9 @@
+global using Xunit;
+global using System.Collections.Generic;
+global using System.Net;
+global using System.Threading.Tasks;
+global using Microsoft.AspNetCore.Mvc.Testing;
+global using Newtonsoft.Json;
+global using Microsoft.AspNetCore.Hosting;
+global using Microsoft.AspNetCore.TestHost;
+global using Microsoft.Extensions.DependencyInjection;

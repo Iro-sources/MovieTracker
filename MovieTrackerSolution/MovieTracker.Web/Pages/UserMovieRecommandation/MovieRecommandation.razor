@@ -1,0 +1,52 @@
+﻿@inherits MovieRecommandationBase
+@page "/movieRecommadation"
+@attribute [Authorize(Roles = "Master, Admin, User")]
+
+
+<AuthorizeView>
+       <Authorized>
+           @if(User is null && ErrorMessage is null & Movies is null)
+           {
+            <h3>Loading....</h3>
+           }
+           else if (ErrorMessage is not null)
+           {
+            <h3>@ErrorMessage</h3>
+           }
+           else
+           {
+               <main>
+                   <header class="rec-header">
+
+                   </header>
+                   <section class="movie-container">
+                    @foreach (var movie in Movies)
+                    {
+                        <div class="movie-card">
+                            <div class="movie-card-wrapper">
+                                <div class="movie-image-container">
+                                    <img src="@movie.Image" alt="Movie poster for @movie.Image" />
+                                </div>
+                                <div class="movie-card-info">
+                                    <h3>@movie.Title</h3>
+                                    <span class="ratring">Rating: @movie.imDbRating/10</span>
+                                    <article class="movie-des">
+                                        <p>@movie.description</p>
+                                        <p>@movie.Genres</p>
+                                    </article>
+                                    <a class="btn btn-outline-dark" @onclick="() => ShowMovieDetails(movie.Id)">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </section>
+               </main>
+            
+           }
+
+
+
+
+       </Authorized>
+</AuthorizeView>
+

@@ -1,0 +1,52 @@
+﻿@using MovieTracker.Web.states.auth;
+@inherits LayoutComponentBase
+@inject IJSRuntime js
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+
+<body>
+    <header class="top-row px-4">
+        <h1><a href="/">MovieTracker</a></h1>
+        <nav>
+            <a @onclick="SignUp" href="javascript:void(0)">Sign up</a>
+        <AuthorizeView>
+            <Authorized>
+                <a @onclick="MyProfile" href="javascript:void(0)">Profile</a>
+                <a @onclick="Logout" href="javascript:void(0)">Logout</a>
+            </Authorized>
+            <NotAuthorized>
+                <a href="/login">Login</a>
+            </NotAuthorized>
+        </AuthorizeView>
+        </nav>
+    </header>
+    <main>
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</body>
+
+
+@code {
+
+    private async Task SignUp()
+    {
+        navManager.NavigateTo("/signup", true);
+    }
+
+    private async Task MyProfile()
+    {
+        navManager.NavigateTo("/profile", true);
+    }
+
+
+    private async Task Logout()
+    {
+
+        var customAuthStateProvider = (CustomAuthStateProvider) authStateProvider;
+        await customAuthStateProvider.LoggoutUser();
+        navManager.NavigateTo("/Login", true);
+    }
+}
+

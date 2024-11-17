@@ -1,0 +1,54 @@
+﻿@inject NavigationManager NavigationManager
+
+<section class="welcome-section">
+    <img class="welcome-img" srcset="https://images.unsplash.com/photo-1616530940355-351fabd9524b?ixlib=rb-4.0.3&amp">
+    <div class="article-text">
+        <AuthorizeView>
+            <Authorized>
+                <a href="usermovies"><h2>Hello, @context.User.Identity.Name!</h2></a>
+                <h4>We are pleased to see you are back. What would you like to do today?</h4>
+                <ul>
+                    <li>Check out the list of movies or search for a specific one</li>
+                    <li>See your recommodations, based on the genres you selected upon signup</li>
+                    <li>Or if you are lost, and just want a random suggestion - Try "spin the wheel"!</li>
+                </ul>
+                <div class="welcome-icon-section">
+                    <div class="icon-box">
+                        <a class="btn btn-outline-light" @onclick="Navigate"><h5>Find a movie</h5></a>
+                    </div>
+                    <div>
+                        <a @onclick="NavigateToMovieRecommodations" class="btn btn-outline-light"><h5>My recommodations</h5></a>
+                    </div>
+                    <div>
+                        <a class="btn btn-outline-light"><h5>Spin the wheel!</h5></a>
+                    </div>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <h2>Hi, stranger!</h2>        
+                <h4>Welcome to the MovieTracker app. Find yourself a movie to watch below</h4>
+                <a class="btn btn-outline-light" @onclick="Navigate"><h5>Find a movie</h5></a>
+                <p>But hey, we recommend that you sign up for tailor made recommodations!</p>
+                <ul>
+                    <li>Get movie recommodations based on genres you like</li>
+                    <li>Add seen movies to your profile with own rating, to keep track and get recommodations of similar movies</li>
+                    <li>Spin the wheel to get a random movie to see</li>
+                    </ul>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</section>
+
+
+@code{
+
+    public void Navigate()
+    {
+        NavigationManager.NavigateTo($"/moviearticles");
+    }
+
+    public void NavigateToMovieRecommodations()
+    {
+        NavigationManager.NavigateTo($"/movieRecommadation");
+    }
+}

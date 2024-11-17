@@ -1,0 +1,42 @@
+﻿form {
+    width: 100%;
+    text-align: center;
+}
+
+.form-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.search-input {
+    width: 20%;
+    padding: 0.5rem;
+    border-radius: 7px;
+    border: 0.5px solid gray;
+}
+
+.drop-down {
+    width: 15%;
+    margin: 2rem;
+}
+
+input {
+    margin: 2rem;
+}
+
+.submit-btn {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    border: 1px solid gray;
+    border-radius: 7px;
+}
+
+select {
+    padding: 0.5rem;
+    border: 1px solid gray;
+    border-radius: 7px;
+}

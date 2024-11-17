@@ -1,0 +1,137 @@
+﻿@page "/usermovies"
+@using MovieTracker.Models.Dtos.UserMoviesData.Api;
+@attribute [Authorize]
+@inject IUserMoviesService _userMoviesService
+@inject UserMoviesGrpcService.MovieService.MovieServiceClient _movieGrpcClient
+<div class="container">
+    <h4>All Movies</h4>
+    <table class="table table-responsive table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Rank
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    FullTitle
+                </th>
+                <th>
+                    Year
+                </th>
+                <th>
+                    Image
+                </th>
+                <th>
+                    Crew
+                </th>
+                <th>
+                    ImDbRating
+                </th>
+                <th>
+                    ImDbRatingCount
+                </th>
+                <th>
+                    Delete
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (data != null)
+                @if (data.Any())
+                {
+                    foreach (var item in data)
+                    {
+                        <tr>
+                            <td>
+                                @item.Rank
+                            </td>
+                            <td>
+                                @item.Title
+                            </td>
+                            <td>
+                                @item.FullTitle
+                            </td>
+                            <td>
+                                @item.Year
+                            </td>
+                            <td>
+                                <img src="@item.Image" style="width:80px;height:80px" />
+                            </td>
+                            <td>
+                                @item.Crew
+                            </td>
+                            <td>
+                                @item.ImDbRating
+                            </td>
+                            <td>
+                                @item.ImDbRatingCount
+                            </td>
+                            <td>
+                                <h3 @onclick="(async()=>DeleteUserMovie(item.Id))">Delete--</h3>
+                            </td>
+                        </tr>
+                    }
+                }
+
+        </tbody>
+    </table>
+</div>
+@code {
+    public List<UserMoviesDto> data { get; set; } = new();
+
+    [CascadingParameter]
+    public Task<AuthenticationState> _state { get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await GetUserData();
+        }
+    }
+
+    private async Task GetUserData()
+    {
+        var userdata = await _state;
+        var user = userdata.User;
+        UserMoviesGrpcService.UserMoviesResponse response = await _movieGrpcClient.GetUserMoviesAsync(new UserMoviesGrpcService.UserMoviesRequest { UserId = user.Identity.Name });
+
+        data = new List<UserMoviesDto>();
+        foreach (var movie in response.UserMovies)
+        {
+            data.Add(new UserMoviesDto
+                {
+                    Id = movie.Id,
+                    Title = movie.Title,
+                    FullTitle = movie.FullTitle,
+                    Crew = movie.Crew,
+                    Image = movie.Image,
+                    ImDbRating = movie.ImDbRating,
+                    ImDbRatingCount = movie.ImDbRatingCount,
+                    Rank = movie.Rank,
+                    UserId = movie.UserId,
+                    Year = movie.Year
+                });
+        }
+        //data = response.UserMovies.ToList<UserMovies>();
+        //data = await _userMoviesService.GetUserMoviesData(user.Identity.Name);
+        StateHasChanged();
+    }
+
+
+    protected async Task DeleteUserMovie(string movieId)
+    {
+        var result = await _movieGrpcClient.DeleteUserMovieAsync(new UserMoviesGrpcService.UserMovieDeleteRequest { MovieId = movieId });
+        if (result.Deleted > 0)
+        {
+            await GetUserData();
+        }
+        //var result = await _userMoviesService.DeleteUserMovie(movieId);
+        //if (result)
+        //{
+        //    await GetUserData();
+        //}
+    }
+}

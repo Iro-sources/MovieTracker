@@ -1,0 +1,47 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "UserMoviesGrpcService";
+
+package movie;
+
+service MovieService {
+    rpc GetUserMovies (UserMoviesRequest) returns (UserMoviesResponse);
+    rpc AddUserMovie (UserMovieRequest) returns (UserMovieResponse);
+    rpc DeleteUserMovie (UserMovieDeleteRequest) returns (UserMovieDeleteResponse);
+}
+
+message UserMoviesRequest {
+    string user_id = 1;
+}
+
+message UserMovie {
+    string id = 1;
+    int32 rank = 2;
+    string title = 3;
+    string full_title = 4;
+    int32 year = 5;
+    string image = 6;
+    string crew = 7;
+    float im_db_rating = 8;
+    string im_db_rating_count = 9;
+    string user_id = 10;
+}
+
+message UserMoviesResponse {
+    repeated UserMovie user_movies = 1;
+}
+
+message UserMovieRequest {
+    UserMovie user_movies = 1;
+}
+message UserMovieResponse {
+    int32 Saved   = 1;
+}
+
+message UserMovieDeleteRequest {
+    string movie_id = 1;
+}
+
+message UserMovieDeleteResponse {
+    int32 Deleted   = 1;
+}

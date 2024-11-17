@@ -1,0 +1,50 @@
+﻿.movie-list-card {
+    padding: 1rem;
+    width: 400px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.movie-list-card img {
+        width: 40%;
+}
+
+.movie-list-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 3rem;
+}
+
+.result {
+    width: 100%;
+    text-align: center;
+    margin: 3rem;
+}
+
+.article-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1rem;
+    width: 50%;
+}
+
+.article-text h5, p, button {
+        width: 100%;
+}
+
+footer {
+    height: 200px;
+    background-color: #333657;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 0.2rem;
+    font-size: 0.8rem;
+}
+
+a{
+    margin: 0.5rem;
+}

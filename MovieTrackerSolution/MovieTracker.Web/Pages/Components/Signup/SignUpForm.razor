@@ -1,0 +1,102 @@
+﻿<article class="signup-article">
+    <div class="signup-box">
+     
+        <form id="userfields-form">
+            <h3>One step closer!</h3>
+        <div class="row">
+            <div class="col-auto">
+                    <input class="form-control" type="text" name="firstName" placeholder="First name" id="firstName" @bind="FirstName" />
+            </div>
+            <div class="col-auto">
+                <input class="form-control" type="text" name="lastName" placeholder="Last name" id="lastName" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-auto">
+                 <input class="form-control" type="email" name="email" placeholder="Email" id="email" />
+            </div>
+            <div class="col-auto">
+                 <input class="form-control" type="password" name="password" placeholder="Password" id="password" />
+            </div>
+        </div>
+
+        </form>
+        <img class="welcome-img" srcset="https://images.unsplash.com/photo-1616530940355-351fabd9524b?ixlib=rb-4.0.3&amp">
+
+     
+    </div>            
+</article>
+
+<section text-box>
+    <h3>Excellent, now please tell us what genres you tend to like.
+That way we can recommend you something to start off with.</h3>
+</section>
+<section class="signup-img-box">
+           <img class="signup-imgs" srcset="https://images.unsplash.com/photo-1593085512500-5d55148d6f0d?ixlib=rb-4.0.3&amp">
+            <img class="signup-imgs" srcset="https://images.unsplash.com/photo-1590002893558-64f0d58dcca4?ixlib=rb-4.0.3&amp">
+            <img class="signup-imgs" srcset="https://images.unsplash.com/photo-1579935110464-fcd041be62d0?ixlib=rb-4.0.3&amp">
+</section>
+
+
+<form id="config-form">
+        <div class="col-auto">
+        @if (@Genres.Count() > 0)
+        {
+
+            const int genrePerRow = 6;
+            var genreRowList = new List<string>();
+
+            @for (int i = 0; i < Genres.Count(); i++)
+            {
+                genreRowList = Genres.Skip(i * genrePerRow).Take(genrePerRow).ToList();
+
+
+                @if (genreRowList.Count() > 0)
+                {
+                                    <div class="row">
+
+                        @foreach (var genre in genreRowList)
+                        {
+                                                <div class="col">
+
+                                                <div class="form-check form-check-inline">
+                                                        <input type="checkbox" id="@($"checkbox_{@genre}")" name="@genre" value="@genre">
+                                                        <label for="@genre">@genre</label>
+                                                    </div>
+                                                </div>
+
+                        }
+                                    </div>
+                }
+            }
+        } 
+        </div>
+
+    <button type="button" class="btn btn-outline-dark" @onclick="@HandleSumbit">Sumbit</button>
+
+</form>
+
+
+@code {
+
+    [Inject]
+    private IJSRuntime Js { get; set; }
+
+    [Parameter]
+    public List<string> Genres { get; set; }
+
+
+    [Parameter]
+    public string FirstName { get; set; }
+
+
+    [Parameter] public EventCallback<bool> OnSumbit { get; set; }
+
+
+    private Task HandleSumbit()
+    {
+
+        return OnSumbit.InvokeAsync();  // parent component will handle the save logic
+
+    }
+}

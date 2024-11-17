@@ -1,0 +1,62 @@
+﻿@if (Show)
+{
+    <div class="overlay" style="
+                                  z-index: 10;
+                                  position: fixed;
+                                  left: 0;
+                                  top: 0;
+                                  right: 0;
+                                  bottom: 0;
+                                  display: flex;
+                                  align-items: center;
+                                  justify-content: center;
+                                  background-color: rgb(0, 0, 0, 0.5);">
+
+        <div class="modal-container" style="width: 100%;
+                                              max-width: 500px;
+                                              max-height: 550px;
+                                              overflow-y: scroll;
+                                              position: fixed;
+                                              top: 40%;
+                                              left: 50%;
+                                              transform: translate(-50%, -50%);
+                                              background-color: white;">
+                <header class="modal-header">
+                <h2 class="modal-title">@Title</h2>
+                </header>
+                <section class="modal-body">
+                @ChildContent
+                </section>
+                <footer class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="@Save">save</button>
+                    <button type="button" class="btn btn-primary" @onclick="@CloseModal">close</button>
+                </footer>
+        </div>
+    </div>
+
+}
+
+
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool Show { get; set; } = false;
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public EventCallback<bool> OnSave { get; set; }
+    [Parameter] public EventCallback<bool> OnCloseModal { get; set; }
+
+    private Task Save()
+    {
+
+       return OnSave.InvokeAsync(true); // parent component will handle the save logic
+    
+    }
+
+    private Task CloseModal()
+    {
+         return OnCloseModal.InvokeAsync(false); // parent component will handle the close logic
+    }
+
+
+
+
+}

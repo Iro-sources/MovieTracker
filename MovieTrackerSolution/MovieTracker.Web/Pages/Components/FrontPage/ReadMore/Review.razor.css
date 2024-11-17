@@ -1,0 +1,28 @@
+﻿body {
+}
+
+.review-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.review-box {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    border-bottom: 1px solid grey;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+#review{
+    font-style:italic;
+}
+
+#title {
+    border-bottom: 1px solid grey;
+    padding-bottom: 1rem;
+}

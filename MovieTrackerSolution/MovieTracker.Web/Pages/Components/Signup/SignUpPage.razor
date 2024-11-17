@@ -1,0 +1,85 @@
+﻿@page "/signup"
+@inherits SignUpBase
+
+<PageTitle>Sign up</PageTitle>
+
+
+
+
+<section class="signup-section">
+    <form @onsubmit="@SignUpNewUser">
+        <div class="signup-fields-wrapper">
+            <div class="signup-fields">
+                <h1>One step closer</h1>
+                <div class="row">
+                    <div class="col-auto">
+                        <input class="form-control" type="text" name="firstName" placeholder="First name" id="firstName" required @bind="@FirstName" />
+                    </div>
+                    <div class="col-auto">
+                        <input class="form-control" type="text" name="lastName" placeholder="Last name" id="lastName" required @bind="@LastName" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-auto">
+                        <input class="form-control" type="email" name="email" placeholder="Email" id="email" required @bind="@Email" />
+                    </div>
+                    <div class="col-auto">
+                        <input class="form-control" type="password" name="password" placeholder="Password" id="password" required @bind="@Password" />
+                    </div>
+                </div>
+            </div>
+             <img srcset="https://images.unsplash.com/photo-1616530940355-351fabd9524b?ixlib=rb-4.0.3&amp">
+        </div>
+        <section text-box>
+            <h3>
+                Excellent, now please tell us what genres you tend to like.
+                That way we can recommend you something to start off with.
+            </h3>
+        </section>
+        <section class="signup-img-box">
+            <img class="signup-imgs" srcset="https://images.unsplash.com/photo-1593085512500-5d55148d6f0d?ixlib=rb-4.0.3&amp">
+            <img class="signup-imgs" srcset="https://images.unsplash.com/photo-1590002893558-64f0d58dcca4?ixlib=rb-4.0.3&amp">
+            <img class="signup-imgs" srcset="https://images.unsplash.com/photo-1579935110464-fcd041be62d0?ixlib=rb-4.0.3&amp">
+        </section>
+
+
+        <section class="config-section">
+            <div class="col-auto">
+                @if (@GenresList.Count() > 0)
+                {
+
+                    const int genrePerRow = 3;
+                    var genreRowList = new List<string>();
+
+                    @for (int i = 0; i < GenresList.Count(); i++)
+                    {
+                        genreRowList = GenresList.Skip(i * genrePerRow).Take(genrePerRow).ToList();
+
+
+                        @if (genreRowList.Count() > 0)
+                        {
+                            <div class="row">
+
+                                @foreach (var genre in genreRowList)
+                                {
+                                    <div class="col">
+
+                                        <div class="checkbox-wrapper">
+                                            <input type="checkbox" id="@($"checkbox_{@genre}")" name="@genre" value="@genre" @onchange="() => OnCheckBoxChanged(genre)">
+                                            <label for="@genre">@genre</label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+                }
+            </div>
+            <button type="submit" class="btn btn-outline-dark">Sign up</button>
+        </section>
+    </form>
+</section>
+
+
+
+

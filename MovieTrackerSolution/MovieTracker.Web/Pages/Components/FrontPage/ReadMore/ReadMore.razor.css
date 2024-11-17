@@ -1,0 +1,45 @@
+﻿.readmore-section{
+    background-color: #333657;
+    color: white;
+    padding: 3rem;
+}
+
+.readmore-content{
+    display: flex;
+    gap: 8rem;
+    margin-top: 4rem;
+
+}
+
+.readmore-article{
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.cast-box{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+ul{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+a{
+    color: white;
+    max-width: 200px;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+#similars{
+    list-style:circle;
+}

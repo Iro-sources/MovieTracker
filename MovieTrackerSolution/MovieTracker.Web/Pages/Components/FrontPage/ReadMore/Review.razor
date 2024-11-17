@@ -1,0 +1,62 @@
+﻿@page "/movies/reviews/{id}"
+@using MovieTracker.Models.Dtos.UserMovies.Dtos;
+@using MovieTracker.Web.Services.Contracts;
+@using Microsoft.AspNetCore.Components.Routing;
+@inject IMovieDataService _svc
+@inject IUserMoviesService _userMovie
+@inject NavigationManager NavigationManager
+
+<section class="review-container">
+    <h2>Reviews</h2>
+    <h3 id="title">@ReviewData.Title</h3>
+    @if (ReviewData != null)
+        if (ReviewData.Items != null)
+        {
+            foreach (var item in ReviewData.Items)
+            {
+                    if(item.WarningSpoilers != true)
+                    {
+                    <article class="review-box">
+                    <h3>@item.Title</h3>
+                        <h4>Reviewed: @item.Date </h4>
+                        <h5>By IMDb user: <a href="@item.UserUrl">@item.UserName</a></h5>
+                        @if(item.Rate == "")
+                        {
+                            <h6>Rating NYA</h6>
+                            
+                        }
+                        else
+                        {
+                            <h6>User rated @ReviewData.Title a @item.Rate out of 10 possible</h6>
+                        }
+
+                        <p id="review">"@item.Content"</p>
+                    </article>
+                    }
+
+            }
+        }
+</section>
+
+@code {
+
+    public ReviewListDTO ReviewData { get; set; } = new();
+
+    [Parameter]
+    public string Id { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ReviewData = await _svc.GetReviewList(Id);
+            StateHasChanged();
+        }
+    }
+
+}

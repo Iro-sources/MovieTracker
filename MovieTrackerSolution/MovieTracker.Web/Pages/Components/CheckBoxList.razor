@@ -1,0 +1,44 @@
+﻿
+@if(Genres != null)
+{
+    <ul style="list-style: none;">
+        @foreach (var genre in Genres)
+        {
+            <li>
+                <input type="checkbox" value="@genre" id="@($"checkbox_{genre}")" checked="@IsChecked" @onchange="() => OnCheckboxChanged(genre)" />
+                <span>@genre</span>
+            </li>
+        }
+    </ul>
+}
+
+
+@code {
+    [Parameter]
+    public List<string> Genres { get; set; }
+
+    [Parameter]
+    public bool IsChecked { get; set; } = false;
+
+
+    [Inject]
+    private IJSRuntime Js { get; set; }
+
+    [Parameter]
+    public List<string> SelectedGenres { get; set; } = new List<string>();
+
+
+    void OnCheckboxChanged(string genre)
+    {
+        if (SelectedGenres.Contains(genre))
+        {
+            SelectedGenres.Remove(genre);
+        }
+        else
+        {
+            
+            SelectedGenres.Add(genre);
+        }
+    }
+
+}

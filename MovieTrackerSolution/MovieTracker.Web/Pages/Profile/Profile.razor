@@ -1,0 +1,49 @@
+﻿@page "/Profile"
+@using MovieTracker.Web.Pages.Components
+@inherits ProfileBase
+@attribute [Authorize(Roles = "Master, Admin, User")]
+
+
+<AuthorizeView>
+    <Authorized>
+        @if(User is null && ErrorMessage is null ) {
+            <h3>Loading profile....</h3>
+        }
+        else if (ErrorMessage is not null)
+        {
+            <h3>@ErrorMessage</h3>
+        }
+        else
+        {
+       
+            <main class="container my-5">
+                <section class="row justify-content-center">
+                    <article class="col-md-8">
+                        <header>
+                            <h1>Hello @User.FirstName</h1>
+                            <h2>Role: @User.Role</h2>
+                            <h3>Account created at @User.CreatedAt</h3>
+                        </header>
+                        <Button Class="btn btn-primary" OnClick="@OpenModal">Change preferences</Button>
+                        <Modal Show="@_ShowModel" Title="Change preferences" OnSave="@SavePreferences" OnCloseModal="@HandleCloseModal">
+                            <CheckBoxList Genres="@User.SubscribedGenres" IsChecked="@true" SelectedGenres="@SelectedGenres" />
+                            <CheckBoxList Genres="@GenresList.Where(genre => !User.SubscribedGenres.Contains(genre)).ToList()" SelectedGenres="@SelectedGenres" />
+                        </Modal>
+                        <section>
+                            <ul class="list-group">
+                                @foreach (var genre in User.SubscribedGenres)
+                                {
+                                    <li class="list-group-item">@genre</li>
+                                }
+                            </ul>
+                        </section>
+                    </article>
+                </section>
+            </main>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <h1>Hello, unknown</h1>
+    </NotAuthorized>
+</AuthorizeView>
+

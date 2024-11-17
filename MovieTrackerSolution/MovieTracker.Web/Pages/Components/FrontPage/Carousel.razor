@@ -1,0 +1,66 @@
+﻿@page "/inTheatres"
+@using MovieTracker.Models.Dtos.UserMovies.Dtos;
+@using MovieTracker.Web.Services.Contracts;
+@using Microsoft.AspNetCore.Components.Routing;
+@inject IMovieDataService _svc
+@inject IUserMoviesService _userMovie
+@inject IJSRuntime JSRuntime;
+
+@if (Theatres != null && Theatres.Items != null)
+{
+    <div id="carouselExampleCaptions" class="carousel slide">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            @foreach (var item in Theatres.Items)
+            {
+                <div class="carousel-item @(first ? "active" : "")">
+                    <img class="d-block w-100" src="@item.Image" alt="@item.Title">
+                </div>
+                first = false;
+            }
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+}
+else
+{
+    <p>Loading..</p>
+}
+
+
+@code {
+
+    public InTheatreListDTO Theatres { get; set; } = new();
+
+    public bool first { get; set; } = true;
+    public int count { get; set; } = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+    }
+
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Theatres = await _svc.GetInTheatres();
+            await JSRuntime.InvokeVoidAsync("startCarousels");
+            StateHasChanged();
+        }
+    }
+
+}

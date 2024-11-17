@@ -1,0 +1,50 @@
+﻿.welcome-section {
+    background-color: #333657;
+    display: flex;
+    gap: 2rem;
+}
+
+.welcome-section .article-text{
+    color: white;
+    padding: 2rem;
+}
+
+.welcome-img{
+    max-width: 30%;
+    height: auto;
+    padding: 3rem;
+
+}
+
+.article-text{
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.welcome-icon-section{
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.icon-box{
+    display: flex;
+    flex-direction: column;
+}
+
+h2{
+    color: lightgray;
+}
+
+.btn{
+    max-width: 250px;
+}
+
+ul{
+    list-style:circle;
+}
+
+li{
+    margin: 0.5rem;
+}

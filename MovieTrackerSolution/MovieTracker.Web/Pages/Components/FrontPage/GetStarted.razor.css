@@ -1,0 +1,121 @@
+﻿.get-started-section{
+    display: flex;
+    flex-direction: column;
+    gap: 6rem;
+    margin-bottom: 1rem;
+    padding-bottom: 2rem;
+}
+
+.get-started-text{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+    text-align: center;
+    align-items: center;
+}
+
+.get-started-imgs-nonauth{
+    display: grid;
+    grid-template-rows: 50% 50%;
+    grid-template-columns: 33% 33% 33%;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.get-started-imgs-auth {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap:wrap;
+    margin-top: 2rem;
+}
+
+.get-started-imgs-nonauth img{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.get-started-imgs-auth img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+#img1 {
+    grid-area: 1 / 1 / span 1 / span 1;
+}
+
+#img2{
+    grid-area: 1 / 3 / span 1 / span 1;
+}
+
+#img3{
+    grid-area: 2 / 2 / span 1 / span 1;
+}
+
+.std-btn{
+    border: 1px solid black;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    width: 30%;
+}
+
+.quote-section-auth {
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    font-size: 1.2rem;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 0.2rem;
+    background-color: #333657;
+    color: white;
+}
+
+.quote-section-nonauth{
+    height: 150px;
+    width: 100%;
+    background-color: #333657;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    color: white;
+    font-size: 1.2rem;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 0.2rem;
+}
+
+.quote{
+    font-style: italic;
+}
+
+.carousel-box {
+    max-width: 800px;
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    margin: 0 auto;
+    gap: 5rem;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    align-items:center;
+}
+
+.carousel-box img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#in-theatres {
+    text-transform: uppercase;
+    text-shadow: 1px 1px 15px #000;
+}

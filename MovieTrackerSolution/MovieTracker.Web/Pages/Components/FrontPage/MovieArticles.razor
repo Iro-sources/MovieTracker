@@ -1,0 +1,190 @@
+﻿@page "/moviearticles";
+
+@using MovieTracker.Models.Dtos.UserMovies.Dtos;
+@using MovieTracker.Web.Services.Contracts;
+@using Microsoft.AspNetCore.Components.Routing;
+@using System.ComponentModel.DataAnnotations;
+@inject UserMoviesGrpcService.MovieService.MovieServiceClient _movieGrpcClient
+@inject IMovieDataService _svc
+@inject IUserMoviesService _userMovie
+@inject NavigationManager NavigationManager
+
+<section>
+    <EditForm Model="_filter" OnValidSubmit="GetAdvanceFilterV2">
+        <MudGrid>
+            <MudItem md="12" lg="12" Class="d-flex justify-center">
+                <MudItem md="6" lg="6">
+                    <MudTextField @bind-Value="_filter.Title" Label="Name" Variant="Variant.Outlined"></MudTextField>
+                </MudItem>
+            </MudItem>
+            <MudItem md="12" lg="12" Class="d-flex justify-center">
+                <MudItem md="4" lg="4">
+                    <MudSelect T="string" Label="Genre" @bind-Value="_filter.Genre" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined">
+                        @foreach (var genre in genres)
+                        {
+                            <MudSelectItem Value="@(genre)" />
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem md="4" lg="4">
+                    <MudSelect T="string" Label="Year Range" @bind-Value="_filter.Year" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined">
+                        @foreach (var year in years)
+                        {
+                            <MudSelectItem Value="@(year)" />
+                        }
+                    </MudSelect>
+                </MudItem>
+            </MudItem>
+            <MudItem md="12" lg="12" Class="d-flex justify-center">
+                <MudButton Color="Color.Dark" ButtonType="ButtonType.Submit" Variant="Variant.Outlined">Search</MudButton>
+            </MudItem>
+            @*<MudItem md="3" lg="3">
+            <MudButton Color="Color.Primary" @onclick="LoadData" ButtonType="ButtonType.Button" Variant="Variant.Filled">All</MudButton>
+            </MudItem>*@
+        </MudGrid>
+    </EditForm>
+
+    <h4 class="result">Result</h4>
+    <div class="movie-list-container d-flex justify-content-center">
+        @if (MoviesData != null && MoviesData.Items != null)
+        {
+            @if(MoviesData.Items.Any())
+            {
+                foreach (var item in MoviesData.Items)
+                {
+                    <article class="movie-list-card">
+                        <img src="@item.Image" alt="Movie poster for @item.Title" />
+                        <div class="article-text">
+                            <h5>@item.FullTitle</h5>
+                            <p>IMDb Rating: @item.ImDbRating/10</p>
+                            <a class="btn btn-outline-dark" @onclick="() => ShowMovieDetails(item.Id)">Read More</a>
+                            <AuthorizeView>
+                                <Authorized>
+                                    <a class="btn btn-outline-dark" @onclick="@(async()=>await PostData(item,@context.User.Identity.Name))">
+                                        Mark as seen
+                                    </a>
+                                </Authorized>
+                            </AuthorizeView>
+                        </div>
+                    </article>
+                }
+            }
+            else
+            {
+                <div><center>No movies found!</center></div>
+            }
+        }
+        else
+        {
+            <div><center>No movies found!</center></div>
+
+        }
+    </div>
+</section>
+<footer>
+    &copy;Gruppe 11, .NET HIOF, 2023
+</footer>
+
+
+@code {
+    public MovieListDto MoviesData { get; set; } = new();
+
+    public AdvanceFilterV2 _filter { get; set; } = new();
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? name { get; set; }
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? year { get; set; }
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            MoviesData = await _svc.GetMovies();
+            StateHasChanged();
+        }
+    }
+    public async Task PostData(MovieDto item, string name)
+    {
+        //var result = await _userMovie.PostUserMoviesData(new Models.Dtos.UserMoviesData.Api.UserMoviesDto()
+
+           var result = await _movieGrpcClient.AddUserMovieAsync(new UserMoviesGrpcService.UserMovieRequest
+            {
+                UserMovies = new UserMoviesGrpcService.UserMovie
+                {
+                    Id = item.Id + "--" + name,
+                    FullTitle = item.FullTitle,
+                    Crew = item.Crew,
+                    Image = item.Image,
+                    ImDbRating = item.ImDbRating,
+                    Rank = item.Rank,
+                    ImDbRatingCount = item.ImDbRatingCount,
+                    Title = item.Title,
+                    UserId = name,
+                    Year = item.Year
+                }
+            });
+    }
+
+    public void ShowMovieDetails(string movieId)
+    {
+        NavigationManager.NavigateTo($"/movies/{movieId}");
+    }
+    public async Task GetAdvanceFilterV2()
+    {
+        //try
+        //{
+
+        //    int start = int.Parse(_filter.Year.Split(",")[0]);
+        //    int end = int.Parse(_filter.Year.Split(",")[1]);
+
+        //    MoviesData = new MovieListDto()
+        //        {
+        //            Items = MoviesData.Items.Where(a => (a.Title.ToLower().Contains(_filter.Title.ToLower()) && (a.Year >= start && a.Year <= end))).ToList()
+        //        };
+        //    StateHasChanged();
+
+        //}
+        //catch (Exception) { }
+
+        var result = await _svc.GetMoviesByAdvanceFilterV2(_filter.Title, _filter.Year.ToString(), _filter.Genre);
+        MoviesData.Items = result.Select(a => new MovieDto
+            {
+                Id = a.Id,
+                Image = a.Image,
+                FullTitle = a.Title,
+                Title = a.Title,
+                ImDbRating = (float)(a.imDbRating == null ? 0.0 : float.Parse(a.imDbRating)),
+            }).ToList();
+        StateHasChanged();
+    }
+
+    private async Task LoadData()
+    {
+        MoviesData = await _svc.GetMovies();
+        StateHasChanged();
+    }
+    public class AdvanceFilterV2
+    {
+        [Required]
+        public string Title { get; set; }
+        [Required]
+        public string Year { get; set; }
+        [Required]
+        public string Genre { get; set; }
+        public IEnumerable<string> SelectedGeneres { get; set; } = new HashSet<string>();
+    }
+
+    private string[] genres =
+        {"Action","Comedy","Family","History","Mystery","War","Music","Romance","Drama","News","Horror","Crime"};
+
+    private string[] years =
+            {"1900,1949","1950,1999","2000,2022"};
+
+}

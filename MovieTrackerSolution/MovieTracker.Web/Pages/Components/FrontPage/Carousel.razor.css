@@ -1,0 +1,20 @@
+﻿.carousel-control-prev{
+    opacity: 1;
+    width: 30%;
+
+}
+
+.carousel-control-next{
+    opacity: 1;
+    width: 30%;
+
+}
+
+.carousel{
+    width: 50%;
+}
+
+h5{
+    text-shadow: 1px 1px 2px #000;
+    text-transform: uppercase;
+}
