@@ -1,5 +1,6 @@
-#How to Run the MovieTrackerSolution Project
-##Follow these steps to set up and run the MovieTrackerSolution project:
+How to Run the MovieTrackerSolution Project
+
+Follow these steps to set up and run the MovieTrackerSolution project:
 
 
 1. Open the "MovieTrackerSolution" project in Visual Studio.
