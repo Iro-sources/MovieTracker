@@ -1,4 +1,7 @@
-#How to run the project
+How to Run the MovieTrackerSolution Project
+Follow these steps to set up and run the MovieTrackerSolution project:
+
+
 1. Open the "MovieTrackerSolution" project in Visual Studio.
 2. (This step must be done if one is not using the Visual Studio IDE) Make sure you have one
 running SQL server on your machine, and enter "server-name" in the appsettings.json file below
